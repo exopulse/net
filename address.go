@@ -1,3 +1,4 @@
+// Package net contains general network related helpers like Address which serves as a container for host and port.
 package net
 
 import (
