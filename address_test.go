@@ -1,6 +1,7 @@
 package net
 
 import (
+	"encoding/json"
 	"reflect"
 	"testing"
 )
@@ -119,5 +120,38 @@ func TestAddress_MustParseAddress_Failure(t *testing.T) {
 
 	if address.String() != s {
 		t.Errorf("MustParseAddress = %v, want %v", address.String(), s)
+	}
+}
+
+func TestAddress_JSON(t *testing.T) {
+	v1 := struct {
+		ID     string
+		Server Address
+	}{"123", MustParseAddress("127.0.0.1:4000")}
+
+	bytes, err := json.Marshal(&v1)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := string(bytes)
+	expected := `{"ID":"123","Server":"127.0.0.1:4000"}`
+
+	if s != expected {
+		t.Errorf("expected %s, got %s", expected, s)
+	}
+
+	v2 := struct {
+		ID     string
+		Server Address
+	}{}
+
+	if err := json.Unmarshal(bytes, &v2); err != nil {
+		t.Fatal(err)
+	}
+
+	if !reflect.DeepEqual(v1, v2) {
+		t.Errorf("expected %v, got %v", v1, v2)
 	}
 }

@@ -44,8 +44,43 @@ func (a Address) WithDefaultPort(port int) Address {
 	return a
 }
 
+// MarshalJSON marshals this address into JSON value.
+func (a *Address) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.Quote(a.String())), nil
+}
+
+// UnmarshalJSON un-marshals bytes into Address value.
+func (a *Address) UnmarshalJSON(b []byte) error {
+	s, err := strconv.Unquote(string(b))
+
+	if err != nil {
+		return err
+	}
+
+	host, port, err := parseAddress(s)
+
+	if err != nil {
+		return err
+	}
+
+	a.host = host
+	a.port = port
+
+	return nil
+}
+
 // ParseAddress parses string and returns an Address.
 func ParseAddress(value string) (Address, error) {
+	host, port, err := parseAddress(value)
+
+	if err != nil {
+		return Address{}, err
+	}
+
+	return Address{host, port}, nil
+}
+
+func parseAddress(value string) (string, int, error) {
 	var host string
 	var portStr string
 
@@ -58,16 +93,16 @@ func ParseAddress(value string) (Address, error) {
 	}
 
 	if len(host) == 0 {
-		return Address{}, errors.New("empty address")
+		return "", 0, errors.New("empty address")
 	}
 
 	port, err := strconv.ParseInt(portStr, 10, 16)
 
 	if err != nil {
-		return Address{}, err
+		return "", 0, err
 	}
 
-	return Address{host, int(port)}, nil
+	return host, int(port), nil
 }
 
 // MustParseAddress is a helper method that wraps a call to ParseAddress() and panics if the error is non-nil.
