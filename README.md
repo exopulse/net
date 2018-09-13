@@ -1,5 +1,7 @@
-# net
+# exopulse net package
 Golang network related utilities.
+
+[![CircleCI](https://circleci.com/gh/exopulse/net.svg?style=svg)](https://circleci.com/gh/exopulse/net)
 
 # Overview
 
