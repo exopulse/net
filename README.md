@@ -2,6 +2,7 @@
 Golang network related utilities.
 
 [![CircleCI](https://circleci.com/gh/exopulse/net.svg?style=svg)](https://circleci.com/gh/exopulse/net)
+[![GitHub license](https://img.shields.io/github/license/exopulse/unit.svg)](https://github.com/exopulse/unit/blob/master/LICENSE)
 
 # Overview
 
